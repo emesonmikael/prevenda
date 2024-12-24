@@ -1,5 +1,5 @@
 // Configuração da conexão e endereço do contrato
-const contractAddress = "0x8453896e307DAfb7D1596d9f9Ef76dc9de497c74"; // Substitua pelo endereço do contrato
+const contractAddress = "0x881f67A4D717e2818Fc16447fD736EbC4d7f8892"; // Substitua pelo endereço do contrato
 const contractABI = [[
 	{
 		"inputs": [

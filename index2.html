@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pré-venda de Tokens</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .container {
+      max-width: 500px;
+      width: 100%;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #444;
+    }
+    .info {
+      margin-bottom: 20px;
+    }
+    .info p {
+      font-size: 18px;
+      margin: 10px 0;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      background: #007bff;
+      color: #fff;
+      font-size: 16px;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Pré-venda de Tokens</h1>
+    <div class="info">
+      <p><strong>Preço por Token:</strong> <span id="pricePerToken">...</span> BNB</p>
+      <p><strong>Total Disponível:</strong> <span id="totalTokens">...</span> Tokens</p>
+      <p><strong>Total Arrecadado:</strong> <span id="totalRaised">...</span>BNB</p>
+    </div>
+    <form id="buyForm">
+      <div class="form-group">
+        <label for="ethAmount">Quantidade de BNB para Comprar:</label>
+        <input type="text" id="ethAmount" placeholder="Digite o valor em BNB(ex: 0.1)" required>
+      </div>
+      <button type="submit">Comprar Tokens</button>
+    </form>
+  </div>
+
+  <script src="https://cdn.ethers.io/lib/ethers-5.6.umd.min.js"></script>
+  <script>
+    const contractAddress = "0x881f67A4D717e2818Fc16447fD736EbC4d7f8892"; // Substitua pelo endereço do contrato
+    const contractABI = [{"inputs":[{"internalType":"uint256","name":"rate_","type":"uint256"},{"internalType":"address payable","name":"wallet_","type":"address"},{"internalType":"contract IERC20Metadata","name":"token_","type":"address"},{"internalType":"address","name":"distributionWallet_","type":"address"},{"internalType":"address","name":"owner_","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"account","type":"address"}],"name":"Paused","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"rate","type":"uint256"}],"name":"RateChanged","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"purchaser","type":"address"},{"indexed":true,"internalType":"address","name":"beneficiary","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"TokensPurchased","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"account","type":"address"}],"name":"Unpaused","type":"event"},{"inputs":[{"internalType":"address","name":"beneficiary","type":"address"}],"name":"buyTokens","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"uint256","name":"weiAmount","type":"uint256"}],"name":"getTokenAmount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"pause","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"paused","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"rate","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"remainingTokens","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"rate_","type":"uint256"}],"name":"setRate","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"contract IERC20Metadata","name":"token_","type":"address"}],"name":"setToken","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"distributionWallet_","type":"address"}],"name":"setTokenWallet","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address payable","name":"wallet_","type":"address"}],"name":"setWallet","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"token","outputs":[{"internalType":"contract IERC20Metadata","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"tokenWallet","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"unpause","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"wallet","outputs":[{"internalType":"address payable","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"weiRaised","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"stateMutability":"payable","type":"receive"}]
+
+    async function connectToMetaMask() {
+      if (!window.ethereum) {
+        alert("MetaMask não detectado. Por favor, instale-o para continuar.");
+        return null;
+      }
+      try {
+        const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+        return accounts[0]; // Retorna a conta conectada
+      } catch (err) {
+        console.error("Erro ao conectar ao MetaMask:", err);
+        return null;
+      }
+    }
+
+    async function loadContractData() {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const contract = new ethers.Contract(contractAddress, contractABI, provider);
+
+      try {
+        const price = await contract.pricePerToken();
+        const totalAvailable = await contract.totalTokens();
+        const totalRaised = await provider.getBalance(contractAddress);
+
+        document.getElementById("pricePerToken").textContent = ethers.utils.formatEther(price);
+        document.getElementById("totalTokens").textContent = totalAvailable.toString();
+        document.getElementById("totalRaised").textContent = ethers.utils.formatEther(totalRaised);
+      } catch (err) {
+        console.error("Erro ao carregar dados do contrato:", err);
+        alert("Não foi possível carregar os dados do contrato.");
+      }
+    }
+
+    async function buyTokens(event) {
+      event.preventDefault();
+      const ethAmount = document.getElementById("ethAmount").value;
+
+      if (!window.ethereum) {
+        alert("MetaMask não detectado!");
+        return;
+      }
+
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(contractAddress, contractABI, signer);
+
+      try {
+        const tx = await contract.buyTokens({ value: ethers.utils.parseEther(ethAmount) });
+        alert("Transação enviada! Aguardando confirmação...");
+        await tx.wait();
+        alert("Compra realizada com sucesso!");
+        loadContractData(); // Atualiza os dados após a compra
+      } catch (err) {
+        console.error(err);
+        alert("Erro ao comprar tokens: " + err.message);
+      }
+    }
+
+    window.addEventListener("load", async () => {
+      const account = await connectToMetaMask();
+      if (account) {
+        loadContractData();
+      }
+    });
+
+    document.getElementById("buyForm").addEventListener("submit", buyTokens);
+  </script>
+</body>
+</html>
